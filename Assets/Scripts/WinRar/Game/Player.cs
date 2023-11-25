@@ -40,6 +40,7 @@ namespace WinRar.Game
 
         private void HorizontalMove()
         {
+
             Vector2 currentSpeed = Vector2.left * _speed * Time.deltaTime;
             transform.Translate(currentSpeed * (1 + SpeedBoostersCount / 10));
         }
@@ -49,8 +50,14 @@ namespace WinRar.Game
             _isStopped = true;
             OnDead?.Invoke();
         }
-        public void BoosterUpTriggered() { SpeedBoostersCount++; }
-        public void BoosterDownTriggered() { SpeedBoostersCount--; }
+        public void BoosterUpTriggered() {
+            _speed += 5;
+            SpeedBoostersCount++; 
+        }
+        public void BoosterDownTriggered() {
+            _speed -= 5;
+            SpeedBoostersCount--; 
+        }
         public void MoveToTopLayerTriggered()
         {
             if (_inputSystem.Vertical > 0)

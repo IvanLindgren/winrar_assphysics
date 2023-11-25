@@ -18,17 +18,17 @@ namespace WinRar.Game
             if (_inputSystem.Vertical > 0)
             {
                 pos.y = _jumpedY;
-                scale = new Vector3(1, 0.5f, 1);
+                //scale = new Vector3(1, 0.5f, 1);
             }
             else if (_inputSystem.Vertical < 0)
             {
                 pos.y = _crouchedY;
-                scale = new Vector3(1, 0.5f, 1);
+                //scale = new Vector3(1, 0.5f, 1);
             }
             else
             {
                 pos.y = _normalY;
-                scale = new Vector3(1, 1, 1);
+                //scale = new Vector3(1, 1, 1);
             }
 
             transform.localPosition = pos;
@@ -43,10 +43,12 @@ namespace WinRar.Game
             }
             else if (collision.gameObject.CompareTag("BoosterUp"))
             {
+                Destroy(collision.gameObject);
                 _player.BoosterUpTriggered();
             }
             else if (collision.gameObject.CompareTag("BoosterDown"))
             {
+                Destroy(collision.gameObject);
                 _player.BoosterDownTriggered();
             }
             else if (collision.gameObject.CompareTag("MoveToTopLayer"))
