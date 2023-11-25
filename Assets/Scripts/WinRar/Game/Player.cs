@@ -12,7 +12,7 @@ namespace WinRar.Game
         [SerializeField] private float _topLayerY;
         [SerializeField] private float _bottomLayerY;
         [SerializeField] private Transform _cameraArm;
-        [SerializeField] private float speedBoost = 5.0f;
+        [SerializeField] private float _speedBoost = 5.0f;
 
         private bool _isStopped = false;
 
@@ -41,9 +41,8 @@ namespace WinRar.Game
 
         private void HorizontalMove()
         {
-
-            Vector2 currentSpeed = Vector2.left * _speed * Time.deltaTime;
-            transform.Translate(currentSpeed * (1 + SpeedBoostersCount / 10));
+            float currentSpeed = _speed + SpeedBoostersCount * _speedBoost;
+            transform.Translate(Vector2.left * currentSpeed * Time.deltaTime);
         }
 
         public void ObstacleTriggered()
@@ -52,11 +51,11 @@ namespace WinRar.Game
             OnDead?.Invoke();
         }
         public void BoosterUpTriggered() {
-            _speed += speedBoost;
+            _speed += _speedBoost;
             SpeedBoostersCount++; 
         }
         public void BoosterDownTriggered() {
-            _speed -= speedBoost;
+            _speed -= _speedBoost;
             SpeedBoostersCount--; 
         }
         public void MoveToTopLayerTriggered()
