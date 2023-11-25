@@ -1,25 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+namespace WinRar.Game
 {
-    public Transform playerTransform; // —сылка на Transform игрока
-
-    void Start()
+    public class CameraController : MonoBehaviour
     {
+        [SerializeField] private Player _player;
+        [SerializeField] private float _moveDelta = 0.3f;
 
-    }
+        private void Update()
+        {
+            var pos = transform.position;
 
-    void Update()
-    {
-        FollowPlayer();
-    }
+            pos.x = _player.CameraArm.x + _player.SpeedBoostersCount * _moveDelta;
 
-    void FollowPlayer()
-    {
-        Vector3 cameraPosition = transform.position;
-        cameraPosition.y = playerTransform.position.y;
-        transform.position = cameraPosition;
+            transform.position = pos;
+        }
     }
 }

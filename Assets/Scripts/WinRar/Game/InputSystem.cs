@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class InputSystem : MonoBehaviour
+namespace WinRar.Game
 {
-    public bool Jump { get; private set; }
-    public bool Crouch { get; private set; }
-
-    void Update()
+    public class InputSystem : MonoBehaviour
     {
-        Jump = Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W);
-        Crouch = Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S);
+        public float Vertical { get; private set; }
+        public float Horizontal { get; private set; }
+
+        void Update()
+        {
+            Vertical = Input.GetAxis("Vertical");
+            Horizontal = Input.GetAxis("Horizontal");
+        }
     }
 }
 

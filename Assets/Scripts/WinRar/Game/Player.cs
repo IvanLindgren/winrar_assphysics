@@ -1,70 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+namespace WinRar.Game
 {
-    public float speed;
-    public float jumpForce;
-    public float crouchSpeed;
-    private bool isOnPlatform;
-    private InputSystem inputSystem;
-    private Rigidbody2D rb;
-
-    void Start()
+    public class Player : MonoBehaviour
     {
-        isOnPlatform = false;
-        inputSystem = GetComponent<InputSystem>();
-        rb = GetComponent<Rigidbody2D>();
-    }
+        public Action OnDead;
 
-    void Update()
-    {
-        if (isOnPlatform)
-        {
-            MoveCharacter();
-        }
-        if (transform.position.y < -10)
-        {
-            TeleportPlayerToTop();
-        }
-    }
+        [SerializeField] private InputSystem _inputSystem;
+        [SerializeField] private float _speed = 10f;
+        [SerializeField] private float _topLayerY;
+        [SerializeField] private float _bottomLayerY;
+        [SerializeField] private Transform _cameraArm;
 
-    void MoveCharacter()
-    {
-        transform.Translate(Vector2.right * speed * Time.deltaTime);
+        private bool _isStopped = false;
 
-        if (inputSystem.Jump && isOnPlatform)
+        public int SpeedBoostersCount { get; private set; }
+        public Vector3 CameraArm => _cameraArm.position;
+
+        void Update()
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            if (_isStopped)
+                return;
+
+            HorizontalMove();
         }
 
-        if (inputSystem.Crouch)
+        public void Spawn(Vector3 spawnPoint)
         {
-            speed = crouchSpeed;
+            transform.position = spawnPoint;
+            SpeedBoostersCount = 0;
+            _isStopped = false;
         }
-        
-    }
 
-    void TeleportPlayerToTop()
-    {
-        // Устанавливаем позицию игрока на верхнюю границу экрана
-        transform.position = new Vector2(transform.position.x, 10);
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Platform"))
+        public void Stop()
         {
-            isOnPlatform = true;
+            _isStopped = true;
         }
-    }
 
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Platform"))
+        private void HorizontalMove()
         {
-            isOnPlatform = false;
+            Vector2 currentSpeed = Vector2.left * _speed * Time.deltaTime;
+            transform.Translate(currentSpeed * (1 + SpeedBoostersCount / 10));
+        }
+
+        public void ObstacleTriggered()
+        {
+            _isStopped = true;
+            OnDead?.Invoke();
+        }
+        public void BoosterUpTriggered() { SpeedBoostersCount++; }
+        public void BoosterDownTriggered() { SpeedBoostersCount--; }
+        public void MoveToTopLayerTriggered()
+        {
+            if (_inputSystem.Vertical > 0)
+            {
+                var pos = transform.position;
+                pos.y = _topLayerY;
+                transform.position = pos;
+            }
+        }
+        public void MoveToBottomLayerTriggered()
+        {
+            if (_inputSystem.Vertical < 0)
+            {
+                var pos = transform.position;
+                pos.y = _bottomLayerY;
+                transform.position = pos;
+            }
         }
     }
 }
