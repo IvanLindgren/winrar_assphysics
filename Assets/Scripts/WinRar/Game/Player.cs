@@ -12,6 +12,7 @@ namespace WinRar.Game
         [SerializeField] private float _topLayerY;
         [SerializeField] private float _bottomLayerY;
         [SerializeField] private Transform _cameraArm;
+        [SerializeField] private float speedBoost = 5.0f;
 
         private bool _isStopped = false;
 
@@ -51,11 +52,11 @@ namespace WinRar.Game
             OnDead?.Invoke();
         }
         public void BoosterUpTriggered() {
-            _speed += 5;
+            _speed += speedBoost;
             SpeedBoostersCount++; 
         }
         public void BoosterDownTriggered() {
-            _speed -= 5;
+            _speed -= speedBoost;
             SpeedBoostersCount--; 
         }
         public void MoveToTopLayerTriggered()
