@@ -35,7 +35,7 @@ namespace WinRar.Game.Levels
             while (!isAnimsFinished)
                 yield return null;
 
-            SceneManager.LoadScene("PhysicsScene");
+            SceneManager.LoadScene("FinishComicsScene");
         }
 
         private IEnumerator PlayerDeadCoroutine()
