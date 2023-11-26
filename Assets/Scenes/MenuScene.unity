@@ -1272,6 +1272,7 @@ MonoBehaviour:
   _tutorButton: {fileID: 710404025}
   _creditsButton: {fileID: 1725097078}
   _exitButton: {fileID: 1404755887}
+  _startGameSceneName: StartComicsScene
   _tutorImage: {fileID: 632966151}
   _tutorExitButton: {fileID: 1032129376}
   _creditsImage: {fileID: 134014501}

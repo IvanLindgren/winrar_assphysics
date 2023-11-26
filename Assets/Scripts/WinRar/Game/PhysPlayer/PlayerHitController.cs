@@ -13,16 +13,35 @@ namespace WinRar.Game
         [Space]
         [SerializeField] private Trigger _topTrigger;
         [SerializeField] private Trigger _bottomTrigger;
+        [Space]
+        [SerializeField] private Animator _animator;
 
 
         private void Start()
         {
             _topTrigger.OnTriggerEnter += OnCustomTriggerEnter;
             _bottomTrigger.OnTriggerEnter += OnCustomTriggerEnter;
+            _topTrigger.OnTriggerExit += OnCustomTriggerExit;
+            _bottomTrigger.OnTriggerExit += OnCustomTriggerExit;
         }
 
         private void Update()
         {
+            // animation
+            if (_inputSystem.Vertical > 0)
+            {
+                _animator.Play("PlayerCrouchAnim");
+            }
+            else if (_inputSystem.Vertical < 0)
+            {
+                _animator.Play("PlayerJumpAnim");
+            }
+            else
+            {
+                _animator.Play("PlayerRunAnim");
+            }
+
+            // movement
             var pos = transform.localPosition;
             var scale = transform.localScale;
             if (_inputSystem.Vertical > 0 && !_player.CanMoveToTopLayer)
@@ -55,22 +74,32 @@ namespace WinRar.Game
             }
             else if (collision.gameObject.CompareTag("BoosterUp"))
             {
-                Destroy(collision.gameObject);
                 _player.BoosterUpTriggered();
             }
             else if (collision.gameObject.CompareTag("BoosterDown"))
             {
-                Destroy(collision.gameObject);
                 _player.BoosterDownTriggered();
             }
-            // else if (collision.gameObject.CompareTag("MoveToTopLayer"))
-            // {
-            //     _player.MoveToTopLayerTriggered();
-            // }
-            // else if (collision.gameObject.CompareTag("MoveToBottomLayer"))
-            // {
-            //     _player.MoveToBottomLayerTriggered();
-            // }
+            else if (collision.gameObject.CompareTag("MoveToTopLayer"))
+            {
+                _player.CanMoveToTopLayer = true;
+            }
+            else if (collision.gameObject.CompareTag("MoveToBottomLayer"))
+            {
+                _player.CanMoveToBottomLayer = true;
+            }
+        }
+
+        private void OnCustomTriggerExit(Collider2D collision)
+        {
+            if (collision.gameObject.CompareTag("MoveToTopLayer"))
+            {
+                _player.CanMoveToTopLayer = false;
+            }
+            else if (collision.gameObject.CompareTag("MoveToBottomLayer"))
+            {
+                _player.CanMoveToBottomLayer = false;
+            }
         }
     }
 }

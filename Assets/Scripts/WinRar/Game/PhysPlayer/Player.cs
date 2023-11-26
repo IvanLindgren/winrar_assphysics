@@ -80,12 +80,10 @@ namespace WinRar.Game
         }
         public void BoosterUpTriggered()
         {
-            _speed += _speedBoost;
             SpeedBoostersCount++;
         }
         public void BoosterDownTriggered()
         {
-            _speed -= _speedBoost;
             SpeedBoostersCount--;
         }
         public void MoveToTopLayerTriggered()

@@ -1,33 +1,26 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace WinRar.Game.Levels
 {
     public class LevelPhysics : LevelController
     {
-        [SerializeField] private Trigger[] _toTopLayerTriggers;
-        [SerializeField] private Trigger[] _toBottomLayerTriggers;
         [SerializeField] private Trigger _levelFinishTrigger;
         [SerializeField] private Player _player;
         [SerializeField] private Animator _einsteinAnimator;
         [SerializeField] private Transform _einsteinTarget;
         [SerializeField] private Transform _cameraTarget;
+        [Space]
+        [SerializeField] private Animator _angryEinsteinAnimator;
+        [SerializeField] private float _deltaPosX = -8;
 
         private void Start()
         {
-            foreach (Trigger trigger in _toTopLayerTriggers)
-            {
-                trigger.OnTriggerEnter += ToTopLayerTrigger_OnTriggerEnter;
-                trigger.OnTriggerExit += ToTopLayerTrigger_OnTriggerExit;
-            }
-            foreach (Trigger trigger in _toBottomLayerTriggers)
-            {
-                trigger.OnTriggerEnter += ToBottomLayerTrigger_OnTriggerEnter;
-                trigger.OnTriggerExit += ToBottomLayerTrigger_OnTriggerExit;
-            }
-
             _levelFinishTrigger.OnTriggerEnter += LevelFinishTrigger_OnTriggerEnter;
+            _player.OnDead += Player_OnDead;
+            _angryEinsteinAnimator.gameObject.SetActive(false);
         }
 
         private IEnumerator LevelFinishCoroutine()
@@ -42,33 +35,33 @@ namespace WinRar.Game.Levels
             while (!isAnimsFinished)
                 yield return null;
 
-            OnSuccess?.Invoke();
+            SceneManager.LoadScene("PhysicsScene");
         }
 
-        private void ToTopLayerTrigger_OnTriggerEnter(Collider2D col)
+        private IEnumerator PlayerDeadCoroutine()
         {
-            if (col.gameObject.CompareTag("Player"))
-                _player.CanMoveToTopLayer = true;
+            _player.Stop();
+            
+            _angryEinsteinAnimator.gameObject.SetActive(true);
+            var p = _angryEinsteinAnimator.transform.position;
+            _angryEinsteinAnimator.transform.position = new Vector3(_player.transform.position.x + _deltaPosX, p.y, p.z);
+            _angryEinsteinAnimator.Play("EinsteinAngryAnim");
+
+            yield return new WaitForSeconds(_angryEinsteinAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length + 1f);
+
+            _angryEinsteinAnimator.gameObject.SetActive(false);
+            _player.Spawn(SpawnPoint);
         }
-        private void ToTopLayerTrigger_OnTriggerExit(Collider2D col)
-        {
-            if (col.gameObject.CompareTag("Player"))
-                _player.CanMoveToTopLayer = false;
-        }
-        private void ToBottomLayerTrigger_OnTriggerEnter(Collider2D col)
-        {
-            if (col.gameObject.CompareTag("Player"))
-                _player.CanMoveToBottomLayer = true;
-        }
-        private void ToBottomLayerTrigger_OnTriggerExit(Collider2D col)
-        {
-            if (col.gameObject.CompareTag("Player"))
-                _player.CanMoveToBottomLayer = false;
-        }
+
         private void LevelFinishTrigger_OnTriggerEnter(Collider2D col)
         {
             if (col.gameObject.CompareTag("Player"))
                 StartCoroutine(LevelFinishCoroutine());
+        }
+
+        private void Player_OnDead()
+        {
+            StartCoroutine(PlayerDeadCoroutine());
         }
     }
 }

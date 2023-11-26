@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +10,8 @@ namespace WinRar.Menu
         [SerializeField] private Button _tutorButton;
         [SerializeField] private Button _creditsButton;
         [SerializeField] private Button _exitButton;
+        [Space]
+        [SerializeField] private string _startGameSceneName;
         [Space]
         [SerializeField] private GameObject _tutorImage;
         [SerializeField] private Button _tutorExitButton;
@@ -31,7 +32,7 @@ namespace WinRar.Menu
             _creditsExitButton.onClick.AddListener(CreditsExitButton_OnClick);
         }
 
-        private void StartButton_OnClick() => SceneManager.LoadScene("GameScene");
+        private void StartButton_OnClick() => SceneManager.LoadScene(_startGameSceneName);
         private void TutorButton_OnClick() => _tutorImage.SetActive(true);
         private void CreditsButton_OnClick() => _creditsImage.SetActive(true);
         private void ExitButton_OnClick() => Application.Quit();
