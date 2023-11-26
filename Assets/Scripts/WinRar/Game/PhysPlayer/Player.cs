@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace WinRar.Game
@@ -7,6 +8,7 @@ namespace WinRar.Game
     {
         public Action OnDead;
 
+        [SerializeField] private CameraController _camera;
         [SerializeField] private InputSystem _inputSystem;
         [SerializeField] private float _speed = 10f;
         [SerializeField] private float _topLayerY;
@@ -18,6 +20,8 @@ namespace WinRar.Game
 
         public int SpeedBoostersCount { get; private set; }
         public Vector3 CameraArm => _cameraArm.position;
+        public bool CanMoveToTopLayer { get; set; }
+        public bool CanMoveToBottomLayer { get; set; }
 
         void Update()
         {
@@ -25,6 +29,11 @@ namespace WinRar.Game
                 return;
 
             HorizontalMove();
+
+            if (CanMoveToTopLayer)
+                MoveToTopLayerTriggered();
+            if (CanMoveToBottomLayer)
+                MoveToBottomLayerTriggered();
         }
 
         public void Spawn(Vector3 spawnPoint)
@@ -39,6 +48,25 @@ namespace WinRar.Game
             _isStopped = true;
         }
 
+        public void PlayFinishAnim(Action callback, Action invokeEinstein, Vector3 target, Vector3 cameraTarget)
+        {
+            // if on top layer - move to bottom layer
+            // var pos = transform.position;
+            // pos.y = _bottomLayerY;
+            // transform.position = pos;
+
+            // come close to Einstein
+
+            // watch Einstein anim
+            invokeEinstein?.Invoke();
+
+            // unfocus camera and go forward
+            Stop();
+            _camera.IsChasing = false;
+            _camera.transform.position = cameraTarget;
+            StartCoroutine(MoveToCoroutine(callback, target));
+        }
+
         private void HorizontalMove()
         {
             float currentSpeed = _speed + SpeedBoostersCount * _speedBoost;
@@ -47,16 +75,18 @@ namespace WinRar.Game
 
         public void ObstacleTriggered()
         {
-            _isStopped = true;
+            Stop();
             OnDead?.Invoke();
         }
-        public void BoosterUpTriggered() {
+        public void BoosterUpTriggered()
+        {
             _speed += _speedBoost;
-            SpeedBoostersCount++; 
+            SpeedBoostersCount++;
         }
-        public void BoosterDownTriggered() {
+        public void BoosterDownTriggered()
+        {
             _speed -= _speedBoost;
-            SpeedBoostersCount--; 
+            SpeedBoostersCount--;
         }
         public void MoveToTopLayerTriggered()
         {
@@ -75,6 +105,23 @@ namespace WinRar.Game
                 pos.y = _bottomLayerY;
                 transform.position = pos;
             }
+        }
+
+        private IEnumerator MoveToCoroutine(Action callback, Vector3 target)
+        {
+            Vector3 pos = transform.position;
+            float timer = 5f;
+            while (timer > 0)
+            {
+                timer -= Time.deltaTime;
+                transform.position = Vector3.Lerp(pos, target, 1 - timer / 5);
+                yield return null;
+            }
+            transform.position = target;
+            
+            yield return new WaitForSeconds(2);
+
+            callback?.Invoke();
         }
     }
 }

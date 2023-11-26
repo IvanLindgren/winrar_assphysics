@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace WinRar.Game
 {
@@ -9,33 +10,44 @@ namespace WinRar.Game
         [SerializeField] private float _jumpedY;
         [SerializeField] private float _crouchedY;
         [SerializeField] private float _normalY;
+        [Space]
+        [SerializeField] private Trigger _topTrigger;
+        [SerializeField] private Trigger _bottomTrigger;
+
+
+        private void Start()
+        {
+            _topTrigger.OnTriggerEnter += OnCustomTriggerEnter;
+            _bottomTrigger.OnTriggerEnter += OnCustomTriggerEnter;
+        }
 
         private void Update()
         {
             var pos = transform.localPosition;
             var scale = transform.localScale;
-
-            if (_inputSystem.Vertical > 0)
+            if (_inputSystem.Vertical > 0 && !_player.CanMoveToTopLayer)
             {
                 pos.y = _jumpedY;
-                //scale = new Vector3(1, 0.5f, 1);
+                _topTrigger.gameObject.SetActive(true);
+                _bottomTrigger.gameObject.SetActive(false);
             }
-            else if (_inputSystem.Vertical < 0)
+            else if (_inputSystem.Vertical < 0 && !_player.CanMoveToBottomLayer)
             {
                 pos.y = _crouchedY;
-                //scale = new Vector3(1, 0.5f, 1);
+                _topTrigger.gameObject.SetActive(false);
+                _bottomTrigger.gameObject.SetActive(true);
             }
             else
             {
                 pos.y = _normalY;
-                //scale = new Vector3(1, 1, 1);
+                _topTrigger.gameObject.SetActive(true);
+                _bottomTrigger.gameObject.SetActive(true);
             }
-
             transform.localPosition = pos;
             transform.localScale = scale;
         }
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnCustomTriggerEnter(Collider2D collision)
         {
             if (collision.gameObject.CompareTag("Obstacle"))
             {
@@ -51,14 +63,14 @@ namespace WinRar.Game
                 Destroy(collision.gameObject);
                 _player.BoosterDownTriggered();
             }
-            else if (collision.gameObject.CompareTag("MoveToTopLayer"))
-            {
-                _player.MoveToTopLayerTriggered();
-            }
-            else if (collision.gameObject.CompareTag("MoveToBottomLayer"))
-            {
-                _player.MoveToBottomLayerTriggered();
-            }
+            // else if (collision.gameObject.CompareTag("MoveToTopLayer"))
+            // {
+            //     _player.MoveToTopLayerTriggered();
+            // }
+            // else if (collision.gameObject.CompareTag("MoveToBottomLayer"))
+            // {
+            //     _player.MoveToBottomLayerTriggered();
+            // }
         }
     }
 }
