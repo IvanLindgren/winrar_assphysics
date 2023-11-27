@@ -36,7 +36,7 @@ namespace WinRar.Game.Levels
                 yield return null;
 
             SceneManager.LoadScene("IvanTestScene");
-            SceneManager.LoadScene("FinishComicsScene");
+            // SceneManager.LoadScene("FinishComicsScene");
         }
 
         private IEnumerator PlayerDeadCoroutine()
