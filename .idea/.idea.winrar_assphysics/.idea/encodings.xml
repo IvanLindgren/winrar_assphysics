@@ -2,7 +2,8 @@
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with BOM under Windows, with no BOM otherwise">
     <file url="file://$PROJECT_DIR$/Assets/Scripts/WinRar/Game/CameraController.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/WinRar/Game/PhysPlayer/InputSystem.cs" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Assets/Scripts/WinRar/Game/PhysPlayer/Player.cs" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/Assets/Scripts/WinRar/Game/PhysPlayer/Player.cs" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/WinRar/Game/PlayerEncyclopedia.cs" charset="windows-1251" />
   </component>
 </project>

@@ -10,6 +10,7 @@ TagManager:
   - BoosterDown
   - MoveToTopLayer
   - MoveToBottomLayer
+  - WinTrigger
   layers:
   - Default
   - TransparentFX

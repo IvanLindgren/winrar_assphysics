@@ -17,7 +17,8 @@ namespace WinRar.Game
 
             var pos = transform.position;
 
-            pos.x = _player.CameraArm.x + _player.SpeedBoostersCount * _moveDelta;
+            // pos.x = _player.CameraArm.x + _player.SpeedBoostersCount * _moveDelta;
+            pos.x = _player.CameraArm.x;
 
             transform.position = pos;
         }
