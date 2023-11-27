@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/Scenes/FinishComicsScene.unity
     guid: e99ce1b974182b144884c2d25993d992
   - enabled: 1
+    path: Assets/Scenes/3GameScene3.unity
+    guid: 1d5d0625979e2c5428ddc4cf10de026f
+  - enabled: 1
+    path: Assets/Scenes/BadComics.unity
+    guid: 52f48292d33066f4db47c456f0548f29
+  - enabled: 1
     path: Assets/Scenes/IvanTestScene.unity
     guid: 4369bbf5366de0c48ae6a2d7c3b9ccf7
   - enabled: 1
