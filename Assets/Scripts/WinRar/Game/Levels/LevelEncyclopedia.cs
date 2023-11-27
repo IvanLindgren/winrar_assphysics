@@ -88,7 +88,7 @@ namespace WinRar.Game.Levels
             _winDoorAnimator.Play("WinDoorAnim");
             yield return new WaitForSeconds(_winDoorAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length);
 
-            SceneManager.LoadScene("3Game_Scene3");
+            SceneManager.LoadScene("3GameScene3");
         }
 
         private void PlayerEncyclopedia_OnDead()
